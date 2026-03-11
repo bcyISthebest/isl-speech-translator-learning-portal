@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>ISL Learning Platform</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+color:white;
+}
+
+.container{
+text-align:center;
+background:rgba(255,255,255,0.08);
+padding:60px;
+border-radius:20px;
+backdrop-filter:blur(12px);
+box-shadow:0 0 40px rgba(0,255,255,0.3);
+}
+
+h1{
+font-size:50px;
+margin-bottom:40px;
+background:linear-gradient(90deg,#00f2ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+button{
+padding:16px 35px;
+font-size:20px;
+margin:15px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+box-shadow:0 0 25px cyan;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Indian Sign Language</h1>
+
+<button onclick="location.href='/translator'">
+Voice → Sign Translator
+</button>
+
+<br>
+
+<button onclick="location.href='/learn'">
+Start Learning
+</button>
+
+</div>
+
+</body>
+</html>

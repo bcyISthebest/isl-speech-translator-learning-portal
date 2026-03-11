@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Leaderboard</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+padding-top:60px;
+}
+
+h1{
+font-size:42px;
+margin-bottom:20px;
+}
+
+table{
+margin:auto;
+border-collapse:collapse;
+width:400px;
+background:rgba(255,255,255,0.08);
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 0 30px cyan;
+}
+
+th,td{
+padding:15px;
+font-size:18px;
+}
+
+th{
+background:#00ffc8;
+color:black;
+}
+
+tr:nth-child(even){
+background:rgba(255,255,255,0.05);
+}
+
+button{
+margin-top:30px;
+padding:14px 30px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Top Players</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Score</th>
+</tr>
+</thead>
+
+<tbody id="board"></tbody>
+
+</table>
+
+<button onclick="location.href='/learn'">Back to Learn</button>
+
+<script>
+
+var scores=JSON.parse(localStorage.getItem("isl_scores") || "[]")
+
+var table=document.getElementById("board")
+
+scores.slice(0,10).forEach((s,i)=>{
+
+var row=`<tr>
+<td>${i+1}</td>
+<td>${s.name}</td>
+<td>${s.score}</td>
+</tr>`
+
+table.innerHTML+=row
+
+})
+
+</script>
+
+</body>
+</html>

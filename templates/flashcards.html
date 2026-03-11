@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Flashcards</title>
+
+<style>
+
+body{
+background:#0f2027;
+color:white;
+text-align:center;
+font-family:Segoe UI;
+}
+
+video{
+width:350px;
+border-radius:10px;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:8px;
+background:#00ffc8;
+cursor:pointer;
+margin:15px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Flashcard Practice</h1>
+
+<h2 id="word"></h2>
+
+<video id="video" controls></video>
+
+<br>
+
+<button onclick="prev()">Previous</button>
+<button onclick="next()">Next</button>
+
+<br>
+
+<button onclick="location.href='/complete_flashcards'">
+Finish Practice
+</button>
+
+<script>
+
+var cards = {{cards|tojson}}
+
+var index = 0
+
+function load(){
+
+document.getElementById("word").innerText = cards[index].word
+
+document.getElementById("video").src = cards[index].video
+
+}
+
+function next(){
+
+index++
+
+if(index >= cards.length) index = 0
+
+load()
+
+}
+
+function prev(){
+
+index--
+
+if(index < 0) index = cards.length-1
+
+load()
+
+}
+
+load()
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>ISL Quiz Arena</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+padding-top:40px;
+}
+
+.container{
+width:600px;
+margin:auto;
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:20px;
+backdrop-filter:blur(15px);
+box-shadow:0 0 40px rgba(0,255,255,0.3);
+}
+
+h1{
+font-size:38px;
+margin-bottom:10px;
+}
+
+.score{
+font-size:24px;
+margin-bottom:10px;
+color:#00ffc8;
+}
+
+#message{
+font-size:26px;
+margin:10px;
+font-weight:bold;
+display:none;
+}
+
+video{
+width:360px;
+border-radius:12px;
+box-shadow:0 0 30px cyan;
+}
+
+button{
+padding:14px 30px;
+margin:10px;
+font-size:18px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+transform:scale(1.1);
+box-shadow:0 0 30px cyan;
+}
+
+input{
+padding:10px;
+border-radius:8px;
+border:none;
+margin-bottom:10px;
+font-size:16px;
+text-align:center;
+}
+
+.back{
+position:absolute;
+left:20px;
+top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<button class="back" onclick="location.href='/learn'">⬅ Back</button>
+
+<div class="container">
+
+<h1>ISL Quiz Arena</h1>
+
+<input id="playerName" placeholder="Enter your name">
+
+<div class="score">
+Score: <span id="score">0</span>
+</div>
+
+<div id="message"></div>
+
+<video id="video" controls>
+<source src="{{q.video}}" type="video/mp4">
+</video>
+
+<br><br>
+
+<div id="options">
+
+{% for option in q.options %}
+
+<button onclick="check('{{option}}')">
+{{option}}
+</button>
+
+{% endfor %}
+
+</div>
+
+<br>
+
+<button onclick="finishGame()">Finish Game</button>
+
+</div>
+
+<script>
+
+// Load saved score
+var score = localStorage.getItem("quiz_score") || 0
+document.getElementById("score").innerText = score
+
+// Load saved name
+var savedName = localStorage.getItem("player_name")
+if(savedName){
+document.getElementById("playerName").value = savedName
+}
+
+// Save name automatically
+document.getElementById("playerName").addEventListener("change",function(){
+localStorage.setItem("player_name",this.value)
+})
+
+function showMessage(text,color){
+
+var msg=document.getElementById("message")
+
+msg.innerText=text
+msg.style.color=color
+msg.style.display="block"
+
+setTimeout(()=>{
+location.reload()
+},1200)
+
+}
+
+function check(ans){
+
+var correct="{{q.answer}}"
+
+if(ans==correct){
+
+score++
+
+localStorage.setItem("quiz_score",score)
+
+document.getElementById("score").innerText=score
+
+showMessage("✔ Correct!","#00ff9d")
+
+}
+
+else{
+
+showMessage("✖ Wrong!","#ff4c4c")
+
+}
+
+}
+
+function finishGame(){
+
+var player=document.getElementById("playerName").value
+
+if(player==""){
+showMessage("Enter name first","orange")
+return
+}
+
+var scores=JSON.parse(localStorage.getItem("isl_scores") || "[]")
+
+scores.push({
+name:player,
+score:score
+})
+
+scores.sort((a,b)=>b.score-a.score)
+
+localStorage.setItem("isl_scores",JSON.stringify(scores))
+
+localStorage.setItem("quiz_score",0)
+
+window.location="/leaderboard"
+
+}
+
+</script>
+
+</body>
+</html>

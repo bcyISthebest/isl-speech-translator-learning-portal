@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Learn Alphabets</title>
+
+<style>
+
+body{
+background:#0f2027;
+color:white;
+text-align:center;
+font-family:Segoe UI;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:20px;
+padding:40px;
+}
+
+.card{
+background:#203a43;
+padding:15px;
+border-radius:10px;
+}
+
+video{
+width:120px;
+border-radius:8px;
+}
+
+button{
+padding:12px 20px;
+font-size:18px;
+border:none;
+border-radius:8px;
+background:#00ffc8;
+cursor:pointer;
+margin-top:30px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Learn Alphabet Signs</h1>
+
+<div class="grid">
+
+{% for letter in letters %}
+
+<div class="card">
+
+<h2>{{letter.letter}}</h2>
+
+<video controls>
+
+<source src="{{letter.video}}" type="video/mp4">
+
+</video>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+<button onclick="location.href='/complete_alphabet'">
+Finish Alphabet Learning
+</button>
+
+</body>
+</html>

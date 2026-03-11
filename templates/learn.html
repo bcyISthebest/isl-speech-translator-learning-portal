@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Learning Dashboard</title>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+color:white;
+text-align:center;
+padding-top:50px;
+}
+
+h1{
+font-size:42px;
+margin-bottom:20px;
+}
+
+.levels{
+width:800px;
+margin:auto;
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:25px;
+}
+
+.level{
+background:rgba(255,255,255,0.08);
+padding:30px;
+border-radius:18px;
+backdrop-filter:blur(12px);
+box-shadow:0 0 25px rgba(0,255,255,0.2);
+transition:0.3s;
+}
+
+.level:hover{
+transform:scale(1.08);
+box-shadow:0 0 40px cyan;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:10px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+cursor:pointer;
+margin-top:10px;
+}
+
+.back{
+position:absolute;
+left:20px;
+top:20px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<button class="back" onclick="location.href='/'">⬅ Back</button>
+
+<h1>Learn ISL</h1>
+
+<div class="levels">
+
+<div class="level">
+<h2>Level 1 — Alphabets</h2>
+<p>Learn A-Z hand signs</p>
+<button onclick="location.href='/learn/alphabet'">Start</button>
+</div>
+
+<div class="level">
+<h2>Level 2 — Basic Words</h2>
+<p>Hello, Sorry, Thank You</p>
+<button onclick="location.href='/learn/basic'">Start</button>
+</div>
+
+<div class="level">
+<h2>Level 3 — Daily Words</h2>
+<p>Food, Water, Help</p>
+<button onclick="location.href='/learn/daily'">Start</button>
+</div>
+
+<div class="level">
+<h2>Practice Mode</h2>
+<p>Flashcards</p>
+<button onclick="location.href='/flashcards'">Practice</button>
+</div>
+
+<div class="level">
+<h2>Quiz Challenge</h2>
+<p>Test your knowledge</p>
+<button onclick="location.href='/quiz'">Play</button>
+</div>
+
+</div>
+
+</body>
+</html>

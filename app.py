@@ -5,12 +5,11 @@ import warnings
 from sklearn_crfsuite import CRF
 import pickle
 from moviepy.editor import VideoFileClip, concatenate_videoclips
-from moviepy.video.fx.all import resize
 import os
-import googletrans
-from googletrans import Translator
-import time
 import random
+import qrcode
+
+from googletrans import Translator
 
 from flask import Flask, render_template, request, send_from_directory
 
@@ -38,7 +37,7 @@ def launcher():
 
 
 # ---------------------------------------------------
-# TRANSLATOR ENTRY
+# TRANSLATOR PAGE
 # ---------------------------------------------------
 
 @app.route('/translator')
@@ -47,7 +46,7 @@ def index():
 
 
 # ---------------------------------------------------
-# TRANSLATOR RESULT
+# RESULT PAGE + QR GENERATION
 # ---------------------------------------------------
 
 @app.route('/result', methods=['POST'])
@@ -62,15 +61,28 @@ def result():
         'Text to Indian Sign Language': isl_text[0]
     }
 
+    # video url used in QR
+    video_url = request.host_url + "videos/" + video_result
+
+    # generate QR
+    qr_img = qrcode.make(video_url)
+
+    qr_filename = "qr_" + video_result.replace(".mp4", ".png")
+
+    qr_path = os.path.join("static", qr_filename)
+
+    qr_img.save(qr_path)
+
     return render_template(
         "result.html",
         result=items,
-        result1=video_result
+        result1=video_result,
+        qr=qr_filename
     )
 
 
 # ---------------------------------------------------
-# LEARN DASHBOARD
+# LEARNING DASHBOARD
 # ---------------------------------------------------
 
 @app.route('/learn')
@@ -85,7 +97,7 @@ def learn():
 
 
 # ---------------------------------------------------
-# LEVEL 1 — ALPHABETS
+# LEVEL 1 ALPHABETS
 # ---------------------------------------------------
 
 @app.route('/learn/alphabet')
@@ -104,14 +116,11 @@ def alphabet():
                 "video": "/videos/" + filename
             })
 
-    return render_template(
-        "words.html",
-        words=letters
-    )
+    return render_template("words.html", words=letters)
 
 
 # ---------------------------------------------------
-# LEVEL 2 — BASIC WORDS
+# LEVEL 2 BASIC WORDS
 # ---------------------------------------------------
 
 @app.route('/learn/basic')
@@ -131,7 +140,7 @@ def basic_words():
 
 
 # ---------------------------------------------------
-# LEVEL 3 — DAILY WORDS
+# LEVEL 3 DAILY WORDS
 # ---------------------------------------------------
 
 @app.route('/learn/daily')
@@ -189,10 +198,7 @@ def flashcards():
             "video": "/videos/" + w + ".mp4"
         })
 
-    return render_template(
-        "words.html",
-        words=cards
-    )
+    return render_template("words.html", words=cards)
 
 
 # ---------------------------------------------------
@@ -223,7 +229,7 @@ def quiz():
 
 
 # ---------------------------------------------------
-# LEADERBOARD PAGE
+# LEADERBOARD
 # ---------------------------------------------------
 
 @app.route('/leaderboard')
@@ -232,7 +238,7 @@ def leaderboard():
 
 
 # ---------------------------------------------------
-# TRANSLATOR PIPELINE (UNCHANGED)
+# TRANSLATOR PIPELINE
 # ---------------------------------------------------
 
 def processing(result):
@@ -377,6 +383,7 @@ def sentence_reordering(ud_sents):
                 reordered_sent.append(tup)
 
         reordered_sent = reordered_sent + verbs
+
         reordered_sent_list.append(reordered_sent)
 
     return reordered_sent_list
@@ -471,5 +478,6 @@ def video_conversion(lema_isl_sent_list):
 
 # ---------------------------------------------------
 
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False, port=5001)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port)

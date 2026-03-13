@@ -5,8 +5,6 @@
 
 <title>Voice To ISL Result</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
 <style>
 
 *{
@@ -45,24 +43,18 @@ background: rgba(255,255,255,0.05);
 backdrop-filter: blur(15px);
 border-radius:20px;
 padding:40px;
-width:650px;
+width:700px;
 text-align:center;
 box-shadow:0 0 50px rgba(0,255,255,0.2);
 border:1px solid rgba(255,255,255,0.1);
 }
 
 h1{
-font-size:38px;
-margin-bottom:10px;
+font-size:40px;
+margin-bottom:15px;
 background: linear-gradient(90deg,#00f2ff,#00ff95);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
-}
-
-.subtitle{
-font-size:18px;
-opacity:0.9;
-margin-bottom:20px;
 }
 
 .result-box{
@@ -70,20 +62,11 @@ background:rgba(255,255,255,0.08);
 padding:20px;
 border-radius:12px;
 margin-top:20px;
-box-shadow:0 0 15px rgba(0,255,255,0.15);
-}
-
-.result-text{
 font-size:18px;
-margin-bottom:10px;
 }
 
 .video-container{
-margin-top:25px;
-padding:15px;
-background:rgba(0,0,0,0.35);
-border-radius:15px;
-box-shadow:0 0 25px rgba(0,255,255,0.25);
+margin-top:30px;
 }
 
 video{
@@ -91,8 +74,31 @@ border-radius:12px;
 box-shadow:0 0 20px rgba(0,255,255,0.4);
 }
 
+.qr-section{
+margin-top:30px;
+}
+
+.qr-section img{
+width:180px;
+background:white;
+padding:10px;
+border-radius:10px;
+box-shadow:0 0 15px rgba(0,255,255,0.4);
+}
+
+.download-btn{
+display:inline-block;
+margin-top:10px;
+padding:10px 20px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+color:black;
+border-radius:10px;
+text-decoration:none;
+font-weight:bold;
+}
+
 button{
-margin-top:25px;
+margin-top:30px;
 padding:12px 30px;
 border:none;
 border-radius:10px;
@@ -104,14 +110,13 @@ transition:0.3s;
 }
 
 button:hover{
-transform:scale(1.08);
+transform:scale(1.05);
 box-shadow:0 0 25px cyan;
 }
 
 </style>
 
 </head>
-
 
 <body>
 
@@ -121,18 +126,13 @@ box-shadow:0 0 25px cyan;
 
 <img src="{{url_for('static', filename='image.png')}}" width="70">
 
-<h1>Voice → Indian Sign Language</h1>
-
-<p class="subtitle">AI Speech Processing Result</p>
-
+<h1>Generated ISL Output</h1>
 
 <div class="result-box">
 
 {% for value in result.items() %}
 
-<div class="result-text">
-<strong>{{ value[0] }} :</strong> {{ value[1] }}
-</div>
+<p><strong>{{ value[0] }} :</strong> {{ value[1] }}</p>
 
 {% endfor %}
 
@@ -141,27 +141,45 @@ box-shadow:0 0 25px cyan;
 
 <div class="video-container">
 
-<h2 style="margin-bottom:15px;">Text → Sign Language Video</h2>
+<h3>Generated Sign Language Video</h3>
 
-<video width="500" height="360" controls>
+<video width="500" controls>
 
-<source src="{{ url_for('static', filename=result1) }}" type="video/mp4">
+<source src="/videos/{{result1}}" type="video/mp4">
 
-Your browser does not support the video tag.
+Your browser does not support video.
 
 </video>
+
+<br>
+
+<a href="/videos/{{result1}}" download class="download-btn">
+Download Video
+</a>
+
+</div>
+
+
+<div class="qr-section">
+
+<h3>Scan QR to open video</h3>
+
+<img src="{{ url_for('static', filename=qr) }}" alt="QR Code">
+
+<br>
+
+<a href="{{ url_for('static', filename=qr) }}" download class="download-btn">
+Download QR Code
+</a>
 
 </div>
 
 
 <button onclick="location.href='/'">
-
-<i class="fa fa-arrow-left"></i> Back to Converter
-
+Back to Converter
 </button>
 
 </div>
 
 </body>
-
 </html>

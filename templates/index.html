@@ -115,26 +115,10 @@ padding:10px 25px;
 font-size:20px;
 }
 
-.video-box{
-margin-top:30px;
-}
-
-video{
-width:100%;
-border-radius:15px;
-margin-top:10px;
-box-shadow:0 0 20px rgba(0,255,255,0.4);
-}
-
-.download-btn{
-display:inline-block;
-margin-top:10px;
-padding:10px 20px;
-background:linear-gradient(45deg,#00f2ff,#00ff95);
-color:black;
-border-radius:10px;
-text-decoration:none;
-font-weight:bold;
+.qr-info{
+margin-top:15px;
+font-size:14px;
+opacity:0.8;
 }
 
 </style>
@@ -171,7 +155,7 @@ font-weight:bold;
 
 <br>
 
-<input type="submit" value="Convert" class="submit">
+<input type="submit" value="Convert & Generate QR" class="submit">
 
 <br>
 
@@ -179,25 +163,9 @@ font-weight:bold;
 
 </form>
 
-{% if result1 %}
-
-<div class="video-box">
-
-<h3>Generated ISL Video</h3>
-
-<video controls>
-<source src="{{ url_for('static', filename=result1) }}" type="video/mp4">
-</video>
-
-<br>
-
-<a href="{{ url_for('static', filename=result1) }}" download class="download-btn">
-Download Video
-</a>
-
-</div>
-
-{% endif %}
+<p class="qr-info">
+After conversion you will receive a QR code to share the sign video
+</p>
 
 </div>
 

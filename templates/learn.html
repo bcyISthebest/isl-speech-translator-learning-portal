@@ -11,50 +11,69 @@ font-family:Segoe UI;
 background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
 color:white;
 text-align:center;
-padding-top:50px;
+padding-top:60px;
 }
 
 h1{
-font-size:42px;
-margin-bottom:20px;
+font-size:56px;
+margin-bottom:50px;
+background:linear-gradient(90deg,#00f2ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .levels{
-width:800px;
+width:1100px;
 margin:auto;
 display:grid;
 grid-template-columns:repeat(2,1fr);
-gap:25px;
+gap:35px;
 }
 
 .level{
 background:rgba(255,255,255,0.08);
-padding:30px;
-border-radius:18px;
+padding:40px;
+border-radius:20px;
 backdrop-filter:blur(12px);
-box-shadow:0 0 25px rgba(0,255,255,0.2);
+box-shadow:0 0 35px rgba(0,255,255,0.25);
 transition:0.3s;
 }
 
 .level:hover{
 transform:scale(1.08);
-box-shadow:0 0 40px cyan;
+box-shadow:0 0 45px cyan;
+}
+
+.level h2{
+font-size:34px;
+margin-bottom:15px;
+}
+
+.level p{
+font-size:22px;
+margin-bottom:15px;
+opacity:0.9;
 }
 
 button{
+padding:16px 35px;
+font-size:22px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+cursor:pointer;
+}
+
+.back{
+position:absolute;
+left:30px;
+top:30px;
 padding:12px 25px;
 font-size:18px;
 border:none;
 border-radius:10px;
 background:linear-gradient(45deg,#00f2ff,#00ff95);
 cursor:pointer;
-margin-top:10px;
-}
-
-.back{
-position:absolute;
-left:20px;
-top:20px;
 }
 
 </style>
@@ -65,13 +84,13 @@ top:20px;
 
 <button class="back" onclick="location.href='/'">⬅ Back</button>
 
-<h1>Learn ISL</h1>
+<h1>Learn Indian Sign Language</h1>
 
 <div class="levels">
 
 <div class="level">
 <h2>Level 1 — Alphabets</h2>
-<p>Learn A-Z hand signs</p>
+<p>Learn A-Z hand gestures</p>
 <button onclick="location.href='/learn/alphabet'">Start</button>
 </div>
 
@@ -89,7 +108,7 @@ top:20px;
 
 <div class="level">
 <h2>Practice Mode</h2>
-<p>Flashcards</p>
+<p>Interactive Flashcards</p>
 <button onclick="location.href='/flashcards'">Practice</button>
 </div>
 

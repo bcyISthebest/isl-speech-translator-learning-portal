@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head>
 
+<head>
 <title>Learn Alphabets</title>
 
 <style>
@@ -13,32 +13,51 @@ text-align:center;
 font-family:Segoe UI;
 }
 
+h1{
+font-size:50px;
+margin-top:40px;
+}
+
 .grid{
 display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:20px;
-padding:40px;
+grid-template-columns:repeat(5,1fr);
+gap:35px;
+padding:60px;
+width:1000px;
+margin:auto;
 }
 
 .card{
 background:#203a43;
-padding:15px;
-border-radius:10px;
+padding:25px;
+border-radius:15px;
+box-shadow:0 0 25px rgba(0,255,255,0.4);
+}
+
+.card h2{
+font-size:34px;
+margin-bottom:10px;
 }
 
 video{
-width:120px;
-border-radius:8px;
+width:170px;
+border-radius:10px;
 }
 
 button{
-padding:12px 20px;
-font-size:18px;
+padding:16px 35px;
+font-size:22px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 background:#00ffc8;
 cursor:pointer;
 margin-top:30px;
+}
+
+.back{
+position:absolute;
+left:30px;
+top:30px;
 }
 
 </style>
@@ -46,6 +65,8 @@ margin-top:30px;
 </head>
 
 <body>
+
+<button class="back" onclick="location.href='/learn'">⬅ Back</button>
 
 <h1>Learn Alphabet Signs</h1>
 
@@ -58,9 +79,7 @@ margin-top:30px;
 <h2>{{letter.letter}}</h2>
 
 <video controls>
-
 <source src="{{letter.video}}" type="video/mp4">
-
 </video>
 
 </div>
@@ -68,10 +87,6 @@ margin-top:30px;
 {% endfor %}
 
 </div>
-
-<button onclick="location.href='/complete_alphabet'">
-Finish Alphabet Learning
-</button>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>ISL Learning Platform</title>
+<title>Indian Sign Language Platform</title>
 
 <style>
 
@@ -20,17 +20,24 @@ color:white;
 text-align:center;
 background:rgba(255,255,255,0.08);
 padding:60px;
-border-radius:20px;
+border-radius:22px;
 backdrop-filter:blur(12px);
 box-shadow:0 0 40px rgba(0,255,255,0.3);
+width:600px;
 }
 
 h1{
-font-size:50px;
-margin-bottom:40px;
+font-size:48px;
+margin-bottom:15px;
 background:linear-gradient(90deg,#00f2ff,#00ff95);
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+font-size:20px;
+margin-bottom:35px;
+opacity:0.9;
 }
 
 button{
@@ -42,10 +49,11 @@ border-radius:12px;
 background:linear-gradient(45deg,#00f2ff,#00ff95);
 cursor:pointer;
 transition:0.3s;
+font-weight:bold;
 }
 
 button:hover{
-transform:scale(1.1);
+transform:scale(1.08);
 box-shadow:0 0 25px cyan;
 }
 
@@ -59,6 +67,10 @@ box-shadow:0 0 25px cyan;
 
 <h1>Indian Sign Language</h1>
 
+<div class="subtitle">
+AI Powered Voice → Sign Learning Platform
+</div>
+
 <button onclick="location.href='/translator'">
 Voice → Sign Translator
 </button>
@@ -66,7 +78,7 @@ Voice → Sign Translator
 <br>
 
 <button onclick="location.href='/learn'">
-Start Learning
+Start Learning ISL
 </button>
 
 </div>

@@ -16,30 +16,34 @@ padding-top:40px;
 }
 
 h1{
-font-size:38px;
-margin-bottom:30px;
+font-size:50px;
+margin-bottom:40px;
+background:linear-gradient(90deg,#00f2ff,#00ff95);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:30px;
-width:900px;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:40px;
+width:1100px;
 margin:auto;
 }
 
 .card{
-width:200px;
-height:200px;
+width:260px;
+height:260px;
 perspective:1000px;
 cursor:pointer;
+margin:auto;
 }
 
 .inner{
 position:relative;
 width:100%;
 height:100%;
-transition:transform 0.6s;
+transition:transform 0.7s;
 transform-style:preserve-3d;
 }
 
@@ -52,42 +56,47 @@ position:absolute;
 width:100%;
 height:100%;
 backface-visibility:hidden;
-border-radius:15px;
+border-radius:20px;
 display:flex;
 align-items:center;
 justify-content:center;
 flex-direction:column;
-box-shadow:0 0 25px rgba(0,255,255,0.4);
+box-shadow:0 0 35px rgba(0,255,255,0.4);
 }
 
 .front{
 background:rgba(255,255,255,0.08);
-font-size:22px;
+font-size:34px;
+font-weight:bold;
+letter-spacing:2px;
 }
 
 .back{
 background:#111;
 transform:rotateY(180deg);
+padding:10px;
 }
 
 video{
-width:160px;
-border-radius:10px;
+width:210px;
+border-radius:12px;
+box-shadow:0 0 20px cyan;
 }
 
 .backBtn{
 position:absolute;
 left:20px;
 top:20px;
-padding:10px 20px;
+padding:12px 25px;
 border:none;
-border-radius:8px;
-background:#00ffc8;
+border-radius:10px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+font-size:18px;
 cursor:pointer;
 }
 
 .card:hover{
-transform:scale(1.05);
+transform:scale(1.07);
 }
 
 </style>
@@ -109,7 +118,7 @@ transform:scale(1.05);
 
 <div class="front">
 
-<strong>{{item.word}}</strong>
+{{item.word}}
 
 </div>
 
@@ -131,9 +140,7 @@ transform:scale(1.05);
 <script>
 
 function flip(card){
-
 card.classList.toggle("flip")
-
 }
 
 </script>

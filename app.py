@@ -8,10 +8,11 @@ from moviepy.editor import VideoFileClip, concatenate_videoclips
 import os
 import random
 import qrcode
+import time
 
 from googletrans import Translator
 
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, jsonify
 
 app = Flask(__name__, static_folder='static')
 
@@ -28,7 +29,7 @@ def videos(filename):
 
 
 # ---------------------------------------------------
-# HOME / LAUNCHER
+# HOME
 # ---------------------------------------------------
 
 @app.route('/')
@@ -46,7 +47,7 @@ def index():
 
 
 # ---------------------------------------------------
-# RESULT PAGE + QR GENERATION
+# RESULT PAGE + QR
 # ---------------------------------------------------
 
 @app.route('/result', methods=['POST'])
@@ -61,14 +62,12 @@ def result():
         'Text to Indian Sign Language': isl_text[0]
     }
 
-    # video url used in QR
-    video_url = request.host_url + "videos/" + video_result
+    # IMPORTANT: use url_root so QR works on phone
+    video_url = request.url_root + "static/" + video_result
 
-    # generate QR
     qr_img = qrcode.make(video_url)
 
     qr_filename = "qr_" + video_result.replace(".mp4", ".png")
-
     qr_path = os.path.join("static", qr_filename)
 
     qr_img.save(qr_path)
@@ -477,7 +476,69 @@ def video_conversion(lema_isl_sent_list):
 
 
 # ---------------------------------------------------
+# LIVE SPEECH VIDEO COMPILER
+# ---------------------------------------------------
+
+@app.route("/api/compile", methods=["POST"])
+def compile_video():
+
+    data = request.get_json()
+
+    words = data.get("words", [])
+
+    clips = []
+
+    for word in words:
+
+        path = os.path.join(VIDEO_FOLDER, word + ".mp4")
+
+        if os.path.isfile(path):
+
+            clips.append(VideoFileClip(path).resize((500,380)))
+
+        else:
+
+            for ch in word.upper():
+
+                letter = os.path.join(VIDEO_FOLDER, ch + ".mp4")
+
+                if os.path.isfile(letter):
+
+                    clips.append(VideoFileClip(letter).resize((500,380)))
+
+    if len(clips) == 0:
+
+        return jsonify({"error": "No clips found"}), 400
+
+
+    final = concatenate_videoclips(clips, method="compose")
+
+    filename = "isl_" + str(int(time.time())) + ".mp4"
+
+    output_path = os.path.join("static", filename)
+
+    final.write_videofile(output_path)
+
+    video_url = "http://192.168.0.131:5001/static/" + filename
+
+    qr = qrcode.make(video_url)
+
+    qr_name = "qr_" + filename.replace(".mp4",".png")
+
+    qr_path = os.path.join("static", qr_name)
+
+    qr.save(qr_path)
+
+    return jsonify({
+        "video": video_url,
+        "qr": "/static/" + qr_name
+    })
+
+
+# ---------------------------------------------------
 
 if __name__ == "__main__":
+
     port = int(os.environ.get("PORT", 5001))
+
     app.run(host="0.0.0.0", port=port)

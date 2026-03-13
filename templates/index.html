@@ -2,7 +2,7 @@
 <html>
 <head>
 
-<title>Voice To ISL Converter</title>
+<title>Voice → ISL Live Translator</title>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
@@ -25,33 +25,18 @@ color:white;
 overflow:hidden;
 }
 
-.ai-glow{
-position:absolute;
-width:600px;
-height:600px;
-background: radial-gradient(circle,rgba(0,255,255,0.3),transparent);
-filter:blur(120px);
-animation: float 6s infinite alternate;
-}
-
-@keyframes float{
-from{transform:translateY(-20px)}
-to{transform:translateY(20px)}
-}
-
 .container{
 background: rgba(255,255,255,0.05);
 backdrop-filter: blur(15px);
 border-radius:20px;
 padding:40px;
-width:520px;
+width:720px;
 text-align:center;
 box-shadow:0 0 50px rgba(0,255,255,0.2);
-border:1px solid rgba(255,255,255,0.1);
 }
 
 h1{
-font-size:36px;
+font-size:38px;
 margin-bottom:10px;
 background: linear-gradient(90deg,#00f2ff,#00ff95);
 -webkit-background-clip:text;
@@ -61,21 +46,31 @@ background: linear-gradient(90deg,#00f2ff,#00ff95);
 .subtitle{
 font-size:18px;
 opacity:0.85;
-margin-bottom:30px;
+margin-bottom:20px;
 }
 
-#result1{
-width:85%;
+#speechText{
+width:90%;
 padding:12px;
 border-radius:10px;
 border:none;
-outline:none;
 font-size:18px;
 text-align:center;
+margin-bottom:15px;
 background:rgba(255,255,255,0.1);
 color:white;
-box-shadow: inset 0 0 10px rgba(0,255,255,0.2);
-margin-top:10px;
+}
+
+video{
+width:430px;
+margin-top:20px;
+border-radius:12px;
+box-shadow:0 0 25px cyan;
+transition:0.3s;
+}
+
+.mirror{
+transform:scaleX(-1);
 }
 
 button{
@@ -85,40 +80,61 @@ border:none;
 font-size:18px;
 margin:8px;
 cursor:pointer;
-transition:0.3s;
 }
 
 .mic{
 background:linear-gradient(45deg,#00f2ff,#00ff95);
 color:black;
-box-shadow:0 0 15px #00f2ff;
 }
 
 .stop{
 background:#ff3b3b;
 color:white;
-box-shadow:0 0 15px red;
 }
 
-.submit{
-background:linear-gradient(45deg,#00f2ff,#00ff95);
+.toggle{
+display:block;
+margin:15px auto;
+padding:14px 28px;
+font-size:18px;
+font-weight:bold;
+border-radius:12px;
+background:#222;
+color:#00ffc8;
+border:2px solid #00ffc8;
+cursor:pointer;
+}
+
+.toggle.active{
+background:#00ffc8;
 color:black;
-padding:10px 25px;
-font-size:20px;
-margin-top:15px;
 }
 
-.clear{
-background:#444;
-color:white;
-padding:10px 25px;
-font-size:20px;
-}
-
-.qr-info{
-margin-top:15px;
+.toggleStatus{
 font-size:14px;
-opacity:0.8;
+opacity:0.9;
+margin-bottom:10px;
+}
+
+.qrBox{
+margin-top:25px;
+display:none;
+}
+
+.qrBox img{
+width:180px;
+background:white;
+padding:10px;
+border-radius:10px;
+}
+
+.downloadBtn{
+margin-top:10px;
+padding:10px 20px;
+background:linear-gradient(45deg,#00f2ff,#00ff95);
+border:none;
+border-radius:10px;
+cursor:pointer;
 }
 
 </style>
@@ -127,97 +143,241 @@ opacity:0.8;
 
 <body>
 
-<div class="ai-glow"></div>
-
 <div class="container">
 
-<img src="static/image.png" width="70">
+<h1>Voice → ISL Live Translator</h1>
 
-<h1>Voice → Indian Sign Language</h1>
-
-<p class="subtitle">AI Speech Recognition Interface</p>
-
-<form action="/result" method="POST">
-
-<label style="font-size:20px">Speech Input</label><br>
-
-<input type="text" id="result1" name="Name" maxlength="200" required>
-
-<br><br>
-
-<button type="button" class="mic" onclick="startConverting()">
-<i class="fa fa-microphone"></i>
-</button>
-
-<button type="button" class="stop" onclick="stopConverting()">
-<i class="fa fa-stop"></i>
-</button>
-
-<br>
-
-<input type="submit" value="Convert & Generate QR" class="submit">
-
-<br>
-
-<input type="button" value="Clear" onclick="clearText()" class="clear">
-
-</form>
-
-<p class="qr-info">
-After conversion you will receive a QR code to share the sign video
+<p class="subtitle">
+Speak and see sign language instantly
 </p>
+
+<input id="speechText" placeholder="Speech will appear here...">
+
+<br>
+
+<button class="mic" onclick="startListening()">
+<i class="fa fa-microphone"></i> Start
+</button>
+
+<button class="stop" onclick="stopListening()">
+<i class="fa fa-stop"></i> Stop & Generate QR
+</button>
+
+<button id="mirrorToggle" class="toggle" onclick="toggleMirror()">
+🔁 Left-Hand Mode
+</button>
+
+<div class="toggleStatus" id="mirrorStatus">
+Mirror Mode: OFF
+</div>
+
+<div>
+<video id="signVideo" controls autoplay muted></video>
+</div>
+
+<div class="qrBox" id="qrBox">
+
+<h3>Scan QR to watch compiled video</h3>
+
+<img id="qrImage">
+
+<br>
+
+<a id="downloadQR" download>
+<button class="downloadBtn">Download QR</button>
+</a>
+
+</div>
 
 </div>
 
 <script>
 
-var r = document.getElementById('result1');
 var speechRecognizer = new webkitSpeechRecognition();
 
-function startConverting(){
-
-if('webkitSpeechRecognition' in window){
+var videoPlayer = document.getElementById("signVideo");
+var textBox = document.getElementById("speechText");
+var toggleBtn = document.getElementById("mirrorToggle");
+var statusText = document.getElementById("mirrorStatus");
 
 speechRecognizer.continuous = true;
 speechRecognizer.interimResults = true;
 
+/* ENABLE HINDI + ENGLISH */
+
+speechRecognizer.lang = "hi-IN";
+
+var spokenWords = [];
+
+/* TRANSLATE TO ENGLISH */
+
+async function translateToEnglish(text){
+
+const url =
+"https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q="
++ encodeURIComponent(text);
+
+const res = await fetch(url);
+
+const data = await res.json();
+
+return data[0].map(x => x[0]).join("");
+
+}
+
+/* START LISTENING */
+
+function startListening(){
+
 speechRecognizer.start();
 
-var finalTranscripts = '';
+speechRecognizer.onresult = async function(event){
 
-speechRecognizer.onresult = function(event){
+var transcript="";
 
-var interimTranscripts = '';
+for(var i=event.resultIndex;i<event.results.length;i++){
+transcript += event.results[i][0].transcript;
+}
 
-for(var i = event.resultIndex; i < event.results.length; i++){
+/* TRANSLATE SPEECH */
 
-var transcript = event.results[i][0].transcript;
+var englishText = await translateToEnglish(transcript);
 
-if(event.results[i].isFinal){
-finalTranscripts += transcript;
-}else{
-interimTranscripts += transcript;
+textBox.value = englishText;
+
+var words = englishText.trim().toLowerCase().split(" ");
+
+var lastWord = words[words.length-1];
+
+if(!spokenWords.includes(lastWord)){
+spokenWords.push(lastWord);
+playSign(lastWord);
 }
 
 }
 
-r.value = finalTranscripts + interimTranscripts;
+}
+
+/* STOP + SEND TO FLASK */
+
+async function stopListening(){
+
+speechRecognizer.stop();
+
+if(spokenWords.length===0){
+alert("No speech detected");
+return;
+}
+
+const response = await fetch("/api/compile",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+words:spokenWords
+})
+
+});
+
+const data = await response.json();
+
+document.getElementById("qrBox").style.display="block";
+
+document.getElementById("qrImage").src=data.qr;
+
+document.getElementById("downloadQR").href=data.qr;
+
+spokenWords=[];
+
+}
+
+/* PLAY WORD VIDEO */
+
+function playSign(word){
+
+var videoPath="/videos/"+word+".mp4";
+
+var tester=document.createElement("video");
+tester.src=videoPath;
+
+tester.onloadeddata=function(){
+
+videoPlayer.src=videoPath;
+videoPlayer.play();
 
 };
 
+tester.onerror=function(){
+
+spellWord(word);
+
+};
+
+}
+
+/* SPELL WORD */
+
+function spellWord(word){
+
+var letters=word.toUpperCase().split("");
+
+var i=0;
+
+function playNext(){
+
+if(i>=letters.length) return;
+
+videoPlayer.src="/videos/"+letters[i]+".mp4";
+videoPlayer.play();
+
+i++;
+
+videoPlayer.onended=playNext;
+
+}
+
+playNext();
+
+}
+
+/* MIRROR TOGGLE */
+
+function toggleMirror(){
+
+videoPlayer.classList.toggle("mirror");
+
+if(videoPlayer.classList.contains("mirror")){
+
+toggleBtn.classList.add("active");
+statusText.innerText="Mirror Mode: ON (Left Hand)";
+localStorage.setItem("isl_mirror","true");
+
 }else{
-r.value = "Speech recognition not supported";
-}
+
+toggleBtn.classList.remove("active");
+statusText.innerText="Mirror Mode: OFF";
+localStorage.setItem("isl_mirror","false");
 
 }
 
-function stopConverting(){
-speechRecognizer.stop();
 }
 
-function clearText(){
-r.value="";
-stopConverting();
+/* LOAD SAVED MIRROR */
+
+window.onload=function(){
+
+if(localStorage.getItem("isl_mirror")==="true"){
+
+videoPlayer.classList.add("mirror");
+toggleBtn.classList.add("active");
+statusText.innerText="Mirror Mode: ON (Left Hand)";
+
+}
+
 }
 
 </script>
